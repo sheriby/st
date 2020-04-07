@@ -34,6 +34,10 @@ index 5828a3b..d37e59d 100644
 --- a/x.c
 +++ b/x.c
 @@ -149,6 +149,8 @@ static void xhints(void);
++static Fontcache *frc = NULL;
++static int frclen = 0;
++static int frccap = 0;
+
  static int xloadcolor(int, const char *, Color *);
  static int xloadfont(Font *, FcPattern *);
  static void xloadfonts(char *, double);
@@ -164,4 +168,17 @@ index 5828a3b..d37e59d 100644
  	xloadcols();
 -- 
 2.21.0
+    /* Calculate count of spare fonts */
+    fc = sizeof(font2) / sizeof(*font2);
+    if (fc == 0)
+        return;
+
++    /* Allocate memory for cache entries. */
++    if (frccap < 4 * fc) {
++        frccap += 4 * fc - frccap;
++        frc = xrealloc(frc, frccap * sizeof(Fontcache));
++    }
+
+    for (fp = font2; fp - font2 < fc; ++fp) {
+
 
